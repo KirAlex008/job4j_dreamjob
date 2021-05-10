@@ -23,40 +23,31 @@
 <body>
 <div class="container">
     <div class="row">
+
         <table class="table">
             <thead>
             <tr>
                 <th scope="col">Объявления</th>
                 <th scope="col">Описание</th>
                 <th scope="col">Дата</th>
-
             </tr>
             </thead>
             <tbody>
 
             <% for (Post post : Store.instOf().findAll()) { %>
             <tr>
-                <td><%= post.getName() %></td>
-            </tr>
-            <% } %>
-
-            <% for (Post post : Store.instOf().findAll()) { %>
-            <tr>
+                <td><%= post.getName() %> </td>
                 <td><%= post.getDescription() %></td>
+                <td><%= post.getCreated() %></td>
             </tr>
             <% } %>
 
             </tbody>
 
-<%--            <tbody>
-            <% for (Post post : Store.instOf().findAll()) { %>
-            <tr>
-                <td><%= post.getDescription() %></td>
-            </tr>
-            <% } %>
-            </tbody>--%>
         </table>
+
     </div>
+
 </div>
 </body>
 </html>
