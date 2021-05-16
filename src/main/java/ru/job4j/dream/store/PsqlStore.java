@@ -71,7 +71,7 @@ public class PsqlStore implements Store {
     public Collection<Candidate> findAllCandidates() {
         List<Candidate> candidates = new ArrayList<>();
         try (Connection cn = pool.getConnection();
-             PreparedStatement ps =  cn.prepareStatement("SELECT * FROM post")
+             PreparedStatement ps =  cn.prepareStatement("SELECT * FROM candidate")
         ) {
             try (ResultSet it = ps.executeQuery()) {
                 while (it.next()) {
@@ -85,15 +85,24 @@ public class PsqlStore implements Store {
     }
 
     @Override
-    public void save(Post post) {
+    public void saveP(Post post) {
         if (post.getId() == 0) {
-            create(post);
+            createP(post);
         } else {
-            update(post);
+            updateP(post);
         }
     }
 
-    private Post create(Post post) {
+    @Override
+    public void saveC(Candidate candidate) {
+        if (candidate.getId() == 0) {
+            createC(candidate);
+        } else {
+            updateC(candidate);
+        }
+    }
+
+    private Post createP(Post post) {
         try (Connection cn = pool.getConnection();
              PreparedStatement ps =  cn.prepareStatement("INSERT INTO post(name) VALUES (?)", PreparedStatement.RETURN_GENERATED_KEYS)
         ) {
@@ -110,31 +119,76 @@ public class PsqlStore implements Store {
         return post;
     }
 
-    private void update(Post post) {
+    private Candidate createC(Candidate candidate) {
+        try (Connection cn = pool.getConnection();
+             PreparedStatement ps =  cn.prepareStatement("INSERT INTO candidate (name) VALUES (?)", PreparedStatement.RETURN_GENERATED_KEYS)
+        ) {
+            ps.setString(1, candidate.getName());
+            ps.execute();
+            try (ResultSet id = ps.getGeneratedKeys()) {
+                if (id.next()) {
+                    candidate.setId(id.getInt(1));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return candidate;
+    }
+
+    private void updateP(Post post) {
         try (Connection cn = pool.getConnection();
              PreparedStatement st = cn.prepareStatement("update post as u set name=?  where u.id=?")) {
             st.setString(1, post.getName());
             st.setInt(2, post.getId());
             st.executeUpdate();
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void updateC(Candidate candidate) {
+        try (Connection cn = pool.getConnection();
+             PreparedStatement st = cn.prepareStatement("update candidate as u set name=?  where u.id=?")) {
+            st.setString(1, candidate.getName());
+            st.setInt(2, candidate.getId());
+            st.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
     @Override
-    public Post findById(int id) {
+    public Post findByIdP(int id) {
         Post post = null;
         try (Connection cn = pool.getConnection();
             PreparedStatement st = cn.prepareStatement("SELECT * FROM post where id=?")) {
-            st.setInt(1,  id);
-            ResultSet rs = st.executeQuery();
-            while (rs.next()) {
-                String name = rs.getString(2);
-                post = new Post(id, name);
+            st.setInt(1, id);
+            try (ResultSet it = st.executeQuery()) {
+                if (it.next()) {
+                    post = new Post(it.getInt("id"), it.getString("name"));
+                }
             }
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return post;
+    }
+
+    @Override
+    public Candidate findByIdC(int id) {
+        Candidate candidate = null;
+        try (Connection cn = pool.getConnection();
+             PreparedStatement st = cn.prepareStatement("SELECT * FROM candidate where id=?")) {
+            st.setInt(1, id);
+            try (ResultSet it = st.executeQuery()) {
+                if (it.next()) {
+                    candidate = new Candidate(it.getInt("id"), it.getString("name"));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return candidate;
     }
 }
