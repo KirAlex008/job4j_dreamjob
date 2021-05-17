@@ -31,6 +31,10 @@
                 <a class="nav-link" href="<%=request.getContextPath()%>/candidates.do">Кандидаты</a>
             </li>
 
+            <li class="nav-item">
+                <a class="nav-link" href="<%=request.getContextPath()%>/download">Загр</a>
+            </li>
+
             <a class="nav-link" href="<%=request.getContextPath()%>/post/edit.jsp">Добавить вакансию</a>
 
             <a class="nav-link" href="<%=request.getContextPath()%>/candidate/edit.jsp">Добавить кандидата</a>
