@@ -14,8 +14,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Properties;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class PsqlStore implements Store {
+
+    private static final Logger LOG = LoggerFactory.getLogger(PsqlStore.class.getName());
 
     private final BasicDataSource pool = new BasicDataSource();
 
@@ -62,7 +66,7 @@ public class PsqlStore implements Store {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            LOG.error("Connection is not correct", e);
         }
         return posts;
     }
@@ -79,7 +83,7 @@ public class PsqlStore implements Store {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            LOG.error("Connection is not correct", e);
         }
         return candidates;
     }
@@ -114,7 +118,7 @@ public class PsqlStore implements Store {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            LOG.error("Connection is not correct", e);
         }
         return post;
     }
@@ -131,7 +135,7 @@ public class PsqlStore implements Store {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            LOG.error("Connection is not correct", e);
         }
         return candidate;
     }
@@ -143,7 +147,7 @@ public class PsqlStore implements Store {
             st.setInt(2, post.getId());
             st.executeUpdate();
         } catch (Exception e) {
-            e.printStackTrace();
+            LOG.error("Connection is not correct", e);
         }
     }
 
@@ -154,7 +158,7 @@ public class PsqlStore implements Store {
             st.setInt(2, candidate.getId());
             st.executeUpdate();
         } catch (Exception e) {
-            e.printStackTrace();
+            LOG.error("Connection is not correct", e);
         }
     }
 
@@ -170,7 +174,7 @@ public class PsqlStore implements Store {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            LOG.error("Connection is not correct", e);
         }
         return post;
     }
@@ -187,7 +191,7 @@ public class PsqlStore implements Store {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            LOG.error("Connection is not correct", e);
         }
         return candidate;
     }
