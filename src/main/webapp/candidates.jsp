@@ -25,7 +25,6 @@
 </head>
 <body>
 <div class="container pt-3">
-
     <div class="row">
         <div class="card" style="width: 100%">
             <div class="card-header">
@@ -35,18 +34,28 @@
                 <table class="table">
                     <thead>
                     <tr>
-                        <th scope="col">Названия</th>
+                        <th scope="col">Photo</th>
+                        <th scope="col">Name</th>
                     </tr>
                     </thead>
                     <tbody>
                     <c:forEach items="${candidates}" var="candidate">
                         <tr>
                             <td>
-                                <a href='<c:url value="/post/edit.jsp?id=${candidate.id}"/>'>
+                                <img src="<c:url value='/download?name=${candidate.photo}'/>" alt="Photo absent" width="50px" height="50px"/>
+                            <td>
+                                <a href='<c:url value="/upload.jsp?id=${candidate.id}&name=${candidate.name}"/>'>
                                     <i class="fa fa-edit mr-3"></i>
+                                    <rp>(</rp><rt>Upload Photo</rt><rp>)</rp>
                                 </a>
+                                <br>
+                                <a href='<c:url value="/delete.jsp?id=${candidate.id}&name=${candidate.name}"/>'>
+                                    <i class="fa fa-edit mr-3"></i>
+                                    <rp>(</rp><rt>Delete Photo</rt><rp>)</rp>
+                                </a>
+                                <br>
                                 <c:out value="${candidate.name}"/>
-                            </td>
+                                <c:out value="${candidate.id}"/>
                         </tr>
                     </c:forEach>
                     </tbody>

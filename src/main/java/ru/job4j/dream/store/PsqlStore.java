@@ -79,7 +79,7 @@ public class PsqlStore implements Store {
         ) {
             try (ResultSet it = ps.executeQuery()) {
                 while (it.next()) {
-                    candidates.add(new Candidate(it.getInt("id"), it.getString("name")));
+                    candidates.add(new Candidate(it.getInt("id"), it.getString("name"), it.getString("photo")));
                 }
             }
         } catch (Exception e) {
@@ -187,7 +187,7 @@ public class PsqlStore implements Store {
             st.setInt(1, id);
             try (ResultSet it = st.executeQuery()) {
                 if (it.next()) {
-                    candidate = new Candidate(it.getInt("id"), it.getString("name"));
+                    candidate = new Candidate(it.getInt("id"), it.getString("name"), it.getString("photo"));
                 }
             }
         } catch (Exception e) {
@@ -195,4 +195,31 @@ public class PsqlStore implements Store {
         }
         return candidate;
     }
+
+    @Override
+    public void setCandidatePhoto(String photo, int id) {
+        try (Connection cn = pool.getConnection();
+             PreparedStatement ps =  cn.prepareStatement("UPDATE candidate as c SET photo=? WHERE c.id = ?;")
+        ) {
+            ps.setString(1, photo);
+            ps.setInt(2, id);
+            ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void deleteCandidate(int id) {
+        try (Connection cn = pool.getConnection();
+             PreparedStatement ps =  cn.prepareStatement("DELETE FROM candidate WHERE id = ?;")
+        ) {
+            ps.setInt(1, id);
+            ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
 }

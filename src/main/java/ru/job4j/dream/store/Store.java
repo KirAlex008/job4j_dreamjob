@@ -25,4 +25,8 @@ public interface Store {
     Post findByIdP(int id);
 
     Candidate findByIdC(int id);
+
+    void setCandidatePhoto(String photoSource, int id);
+
+    void deleteCandidate(int id);
 }
