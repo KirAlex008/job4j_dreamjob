@@ -1,6 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
 <%@ page import="ru.job4j.dream.model.Candidate" %>
 <%@ page import="ru.job4j.dream.store.PsqlStore" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jstl/core" %>
 <!doctype html>
 <html lang="en">
 <head>
@@ -40,6 +41,7 @@
                     </div>
                     <button type="submit" class="btn btn-primary">Войти</button>
                 </form>
+                <c:out value="${error}"/>
             </div>
         </div>
     </div>
