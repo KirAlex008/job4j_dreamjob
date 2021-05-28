@@ -4,9 +4,16 @@ CREATE TABLE if not exists post (
 );
 
 CREATE TABLE if not exists candidate (
-    id SERIAL PRIMARY KEY,
-    name TEXT,
-    photo TEXT
+     id SERIAL PRIMARY KEY,
+     name TEXT,
+     photo TEXT
+);
+
+CREATE TABLE if not exists users (
+     id SERIAL PRIMARY KEY,
+     name TEXT,
+     email TEXT,
+     password TEXT
 );
 
 

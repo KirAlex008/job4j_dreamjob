@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Properties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.job4j.dream.model.User;
 
 public class PsqlStore implements Store {
 
@@ -203,6 +204,92 @@ public class PsqlStore implements Store {
         ) {
             ps.setString(1, photo);
             ps.setInt(2, id);
+            ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public Collection<User> findAllUsers() {
+        List<User> users = new ArrayList<>();
+        try (Connection cn = pool.getConnection();
+             PreparedStatement ps =  cn.prepareStatement("SELECT * FROM users")
+        ) {
+            try (ResultSet it = ps.executeQuery()) {
+                while (it.next()) {
+                    users.add(new User(it.getInt("id"),it.getString("name"), it.getString("email"), it.getString("password")));
+                }
+            }
+        } catch (Exception e) {
+            LOG.error("Connection is not correct", e);
+        }
+        return users;
+    }
+
+    private User createUser(User user) {
+        try (Connection cn = pool.getConnection();
+             PreparedStatement ps =  cn.prepareStatement("INSERT INTO users(name, email, password) VALUES (?, ?, ?)", PreparedStatement.RETURN_GENERATED_KEYS)
+        ) {
+            ps.setString(1, user.getName());
+            ps.setString(2, user.getEmail());
+            ps.setString(3, user.getPassword());
+            ps.execute();
+            try (ResultSet id = ps.getGeneratedKeys()) {
+                if (id.next()) {
+                    user.setId(id.getInt(1));
+                }
+            }
+        } catch (Exception e) {
+            LOG.error("Connection is not correct", e);
+        }
+        return user;
+    }
+
+    private void updateUser(User user) {
+        try (Connection cn = pool.getConnection();
+             PreparedStatement st = cn.prepareStatement("UPDATE users as u set name =?,  email =?, password =? where u.id=?")) {
+            st.setString(1, user.getEmail());
+            st.setString(2, user.getPassword());
+            st.setInt(3, user.getId());
+            st.executeUpdate();
+        } catch (Exception e) {
+            LOG.error("Connection is not correct", e);
+        }
+    }
+
+    @Override
+    public void saveUser(User user) {
+        if (user.getId() == 0) {
+            createUser(user);
+        } else {
+            updateUser(user);
+        }
+    }
+
+    @Override
+    public User findByIdUser(int id) {
+        User user = null;
+        try (Connection cn = pool.getConnection();
+             PreparedStatement st = cn.prepareStatement("SELECT * FROM users where id=?")) {
+            st.setInt(1, id);
+            try (ResultSet it = st.executeQuery()) {
+                if (it.next()) {
+                    user = new User(it.getInt("id"), it.getString("name"),it.getString("email"), it.getString("password"));
+                }
+            }
+        } catch (Exception e) {
+            LOG.error("Connection is not correct", e);
+        }
+        return user;
+    }
+
+    @Override
+    public void deleteUser(int id) {
+        try (Connection cn = pool.getConnection();
+             PreparedStatement ps =  cn.prepareStatement("DELETE FROM users WHERE id = ?;")
+        ) {
+            ps.setInt(1, id);
             ps.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();
