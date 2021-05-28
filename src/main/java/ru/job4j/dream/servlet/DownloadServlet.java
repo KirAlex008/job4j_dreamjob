@@ -16,7 +16,6 @@ public class DownloadServlet extends HttpServlet {
         resp.setContentType("image/png; image/jpeg");
         resp.setHeader("Content-Disposition", "attachment; filename=\"" + name + "\"");
         File file = new File("c:" + File.separator + "images" + File.separator + name);
-        System.out.println(file.toString() + "last");
         try (FileInputStream in = new FileInputStream(file)) {
             resp.getOutputStream().write(in.readAllBytes());
         }

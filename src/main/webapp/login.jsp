@@ -41,7 +41,11 @@
                     </div>
                     <button type="submit" class="btn btn-primary">Войти</button>
                 </form>
-                <c:out value="${error}"/>
+                <% String messIn = (String)request.getAttribute("error");
+                    if (messIn != null) {
+                        pageContext.setAttribute("mess", messIn);
+                } %>
+                <p><c:out value="${mess}" /></p>
             </div>
         </div>
     </div>
