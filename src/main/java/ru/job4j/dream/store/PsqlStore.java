@@ -210,28 +210,31 @@ public class PsqlStore implements Store {
         }
     }
 
-    private User createUser(User user) {
-        try (Connection cn = pool.getConnection();
-             PreparedStatement ps =  cn.prepareStatement("INSERT INTO users(name, email, password) VALUES (?, ?, ?)", PreparedStatement.RETURN_GENERATED_KEYS)
-        ) {
-            ps.setString(1, user.getName());
-            ps.setString(2, user.getEmail());
-            ps.setString(3, user.getPassword());
-            ps.execute();
-            try (ResultSet id = ps.getGeneratedKeys()) {
-                if (id.next()) {
-                    user.setId(id.getInt(1));
+    @Override
+    public User createUser(User user) {
+        if (user.getId() == 0) {
+            try (Connection cn = pool.getConnection();
+                 PreparedStatement ps = cn.prepareStatement("INSERT INTO users(name, email, password) VALUES (?, ?, ?)", PreparedStatement.RETURN_GENERATED_KEYS)
+            ) {
+                ps.setString(1, user.getName());
+                ps.setString(2, user.getEmail());
+                ps.setString(3, user.getPassword());
+                ps.execute();
+                try (ResultSet id = ps.getGeneratedKeys()) {
+                    if (id.next()) {
+                        user.setId(id.getInt(1));
+                    }
                 }
+            } catch (Exception e) {
+                LOG.error("Connection is not correct", e);
             }
-        } catch (Exception e) {
-            LOG.error("Connection is not correct", e);
         }
-        return user;
+            return user;
     }
 
 
     @Override
-    public User findByEmailUser(String email) {
+    public User findByEmail(String email) {
         User user = null;
         try (Connection cn = pool.getConnection();
              PreparedStatement st = cn.prepareStatement("SELECT * FROM users where email=?")) {

@@ -16,6 +16,11 @@
   </filter-mapping>
 
   <servlet>
+    <servlet-name>RegServlet</servlet-name>
+    <servlet-class>ru.job4j.dream.servlet.RegServlet</servlet-class>
+  </servlet>
+
+  <servlet>
     <servlet-name>AuthServlet</servlet-name>
     <servlet-class>ru.job4j.dream.servlet.AuthServlet</servlet-class>
   </servlet>
@@ -39,14 +44,22 @@
     <servlet-name>PostServlet</servlet-name>
     <servlet-class>ru.job4j.dream.servlet.PostServlet</servlet-class>
   </servlet>
+
   <servlet>
     <servlet-name>CandidateServlet</servlet-name>
     <servlet-class>ru.job4j.dream.servlet.CandidateServlet</servlet-class>
   </servlet>
+
   <servlet>
     <servlet-name>DeleteServlet</servlet-name>
     <servlet-class>ru.job4j.dream.servlet.DeleteServlet</servlet-class>
   </servlet>
+
+  <servlet-mapping>
+    <servlet-name>RegServlet</servlet-name>
+    <url-pattern>/reg.do</url-pattern>
+  </servlet-mapping>
+
 
   <servlet-mapping>
     <servlet-name>AuthServlet</servlet-name>
