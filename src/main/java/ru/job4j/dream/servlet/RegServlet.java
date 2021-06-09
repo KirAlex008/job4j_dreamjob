@@ -14,9 +14,14 @@ public class RegServlet extends HttpServlet {
         String email = req.getParameter("email");
         String name = req.getParameter("name");
         String password = req.getParameter("password");
-        User user = new User(0, name, email, password);
-        PsqlStore.instOf().createUser(user);
-        req.getRequestDispatcher("login.jsp").forward(req, resp);
+        User user = PsqlStore.instOf().findByEmail(email);
+        if (user == null) {
+            user = new User(0, name, email, password);
+            PsqlStore.instOf().createUser(user);
+            req.getRequestDispatcher("login.jsp").forward(req, resp);
+        } else {
+            req.setAttribute("error", "Такой email уже существует, укажите другой");
+            req.getRequestDispatcher("reg.jsp").forward(req, resp);
+        }
     }
-
 }

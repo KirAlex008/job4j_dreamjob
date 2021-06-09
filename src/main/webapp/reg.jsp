@@ -45,6 +45,11 @@
                     </div>
                     <button type="submit" class="btn btn-primary">Зарегистрироваться</button>
                 </form>
+                <% String messIn = (String)request.getAttribute("error");
+                    if (messIn != null) {
+                        pageContext.setAttribute("mess", messIn);
+                    } %>
+                <p><c:out value="${mess}" /></p>
             </div>
         </div>
     </div>
