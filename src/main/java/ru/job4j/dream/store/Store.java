@@ -31,11 +31,5 @@ public interface Store {
 
     void deleteCandidate(int id);
 
-    Collection<User> findAllUsers();
-
-    void saveUser(User user);
-
-    User findByIdUser(int id);
-
-    void deleteUser(int id);
+    User findByEmailUser(String email);
 }

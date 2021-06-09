@@ -210,23 +210,6 @@ public class PsqlStore implements Store {
         }
     }
 
-    @Override
-    public Collection<User> findAllUsers() {
-        List<User> users = new ArrayList<>();
-        try (Connection cn = pool.getConnection();
-             PreparedStatement ps =  cn.prepareStatement("SELECT * FROM users")
-        ) {
-            try (ResultSet it = ps.executeQuery()) {
-                while (it.next()) {
-                    users.add(new User(it.getInt("id"),it.getString("name"), it.getString("email"), it.getString("password")));
-                }
-            }
-        } catch (Exception e) {
-            LOG.error("Connection is not correct", e);
-        }
-        return users;
-    }
-
     private User createUser(User user) {
         try (Connection cn = pool.getConnection();
              PreparedStatement ps =  cn.prepareStatement("INSERT INTO users(name, email, password) VALUES (?, ?, ?)", PreparedStatement.RETURN_GENERATED_KEYS)
@@ -246,33 +229,13 @@ public class PsqlStore implements Store {
         return user;
     }
 
-    private void updateUser(User user) {
-        try (Connection cn = pool.getConnection();
-             PreparedStatement st = cn.prepareStatement("UPDATE users as u set name =?,  email =?, password =? where u.id=?")) {
-            st.setString(1, user.getEmail());
-            st.setString(2, user.getPassword());
-            st.setInt(3, user.getId());
-            st.executeUpdate();
-        } catch (Exception e) {
-            LOG.error("Connection is not correct", e);
-        }
-    }
 
     @Override
-    public void saveUser(User user) {
-        if (user.getId() == 0) {
-            createUser(user);
-        } else {
-            updateUser(user);
-        }
-    }
-
-    @Override
-    public User findByIdUser(int id) {
+    public User findByEmailUser(String email) {
         User user = null;
         try (Connection cn = pool.getConnection();
-             PreparedStatement st = cn.prepareStatement("SELECT * FROM users where id=?")) {
-            st.setInt(1, id);
+             PreparedStatement st = cn.prepareStatement("SELECT * FROM users where email=?")) {
+            st.setString(1, email);
             try (ResultSet it = st.executeQuery()) {
                 if (it.next()) {
                     user = new User(it.getInt("id"), it.getString("name"),it.getString("email"), it.getString("password"));
@@ -282,18 +245,6 @@ public class PsqlStore implements Store {
             LOG.error("Connection is not correct", e);
         }
         return user;
-    }
-
-    @Override
-    public void deleteUser(int id) {
-        try (Connection cn = pool.getConnection();
-             PreparedStatement ps =  cn.prepareStatement("DELETE FROM users WHERE id = ?;")
-        ) {
-            ps.setInt(1, id);
-            ps.executeUpdate();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     @Override
