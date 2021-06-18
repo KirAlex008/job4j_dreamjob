@@ -9,33 +9,33 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script>
         function validate() {
-            const value1 = $('#name').val();
+            const tableFieldName = $('#name').val();
+            let missingFields = '';
 
-            if (value1 !== '') {
-                alert($('#name').val());
-            } else {
-                alert($('#name').attr('title'));
+            if (tableFieldName == '') {
+                missingFields +=  " name ";
             }
 
-            const value2 = $('#surname').val();
-            if (value2 !== '') {
-                alert($('#surname').val());
-            } else {
-                alert($('#surname').attr('title'));
+
+            const tableFieldSurname = $('#surname').val();
+            if (tableFieldSurname == '') {
+                missingFields +=  " surname ";
             }
 
-            const value3 = $('#sex').val();
-            if (value3 !== '') {
-                alert($('#sex').val());
-            } else {
-                alert($('#sex').attr('title'));
+
+            const tableFieldSex = $('#sex').val();
+            if (tableFieldSex == '') {
+                missingFields += " sex ";
             }
 
-            const value4 = $('#desc').val();
-            if (value4 !== '') {
-                alert($('#desc').val());
-            } else {
-                alert($('#desc').attr('title'));
+
+            const tableFieldDescription = $('#desc').val();
+            if (tableFieldDescription == '') {
+                missingFields += " description ";
+            }
+
+            if (missingFields !== '') {
+                alert("Enter next fields: " + missingFields);
             }
             return false;
 
@@ -43,17 +43,15 @@
     </script>
     <script>
         function addRow() {
-
-            const value1 = $('#name').val();
-            const value2 = $('#surname').val();
-            const value3 = $('#sex').val();
-            const value4 = $('#desc').val();
+            const tableFieldName = $('#name').val();
+            const tableFieldSurname = $('#surname').val();
+            const tableFieldSex = $('#sex').val();
+            const tableFieldDescription = $('#desc').val();
             //получаем значение поля usr
-
             //получаем ссылку на последний элемент в таблице.
             //и после него добавляем html
-            $('#table tr:last').after('<tr><td>' + value1 +'</td><td>'
-                + value2 +'</td><td>' + value3 +'</td><td>' + value4 + '</td></tr>');
+            $('#table tr:last').after('<tr><td>' + tableFieldName +'</td><td>'
+                + tableFieldSurname +'</td><td>' + tableFieldSex +'</td><td>' + tableFieldDescription + '</td></tr>');
         }
     </script>
 </head>
