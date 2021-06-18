@@ -8,7 +8,24 @@
     <title>AJAX</title>
 </head>
 <body>
-<script src="https://code.jquery.com/jquery-3.4.1.min.js" ></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" ></script>
+
+<script>
+    function sendGreeting() {
+        $.ajax({
+            type: 'GET',
+            url: 'http://localhost:8080/dreamjob/greet',
+            data: 'name=' + $('#exampleInputEmail1').val(),
+            dataType: 'text'
+        }).done(function(data) {
+            //alert(data);
+            console.log();
+            $('#exampleInputEmail1').before('<p>' + data + '</p>');
+        }).fail(function(err){
+            alert(err);
+        });
+    }
+</script>
 
 <div class="container">
     <form>
