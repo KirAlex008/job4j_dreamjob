@@ -36,6 +36,9 @@
             <li class="nav-item">
                 <a class="nav-link" href="<%=request.getContextPath()%>/upload.jsp">Загр на серв</a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" href="<%=request.getContextPath()%>/AjaxJson.html">Ajax</a>
+            </li>
             <%--<li class="nav-item">
                 <a class="nav-link" href="<%=request.getContextPath()%>/download">Загр</a>
             </li>--%>

@@ -5,22 +5,32 @@
 <web-app>
   <display-name>Archetype Created Web Application</display-name>
 
-  <!--<filter>
+  <filter>
     <filter-name>AuthFilter</filter-name>
     <filter-class>ru.job4j.dream.filter.AuthFilter</filter-class>
   </filter>
+<!--  <filter>
+    <filter-name>CORSFilter</filter-name>
+    <filter-class>ru.job4j.dream.filter.CORSFilter</filter-class>
+  </filter>
+
+  <filter-mapping>
+    <filter-name>CORSFilter</filter-name>
+    <url-pattern>*</url-pattern>
+  </filter-mapping>-->
 
   <filter-mapping>
     <filter-name>AuthFilter</filter-name>
     <url-pattern>*.do</url-pattern>
-  </filter-mapping>-->
+  </filter-mapping>
+
 
   <servlet>
     <servlet-name>GreetingServlet</servlet-name>
     <servlet-class>ru.job4j.dream.servlet.GreetingServlet</servlet-class>
   </servlet>
 
-  <!--<servlet>
+  <servlet>
     <servlet-name>RegServlet</servlet-name>
     <servlet-class>ru.job4j.dream.servlet.RegServlet</servlet-class>
   </servlet>
@@ -59,13 +69,13 @@
     <servlet-name>DeleteServlet</servlet-name>
     <servlet-class>ru.job4j.dream.servlet.DeleteServlet</servlet-class>
   </servlet>
--->
+
   <servlet-mapping>
     <servlet-name>GreetingServlet</servlet-name>
     <url-pattern>/greet</url-pattern>
   </servlet-mapping>
 
-  <!--<servlet-mapping>
+  <servlet-mapping>
     <servlet-name>RegServlet</servlet-name>
     <url-pattern>/reg.do</url-pattern>
   </servlet-mapping>
@@ -101,6 +111,6 @@
   <servlet-mapping>
     <servlet-name>CandidateServlet</servlet-name>
     <url-pattern>/candidates.do</url-pattern>
-  </servlet-mapping>-->
+  </servlet-mapping>
 
 </web-app>
