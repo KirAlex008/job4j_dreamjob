@@ -64,6 +64,8 @@
                         <tr>
                             <td>
                                 <img src="<c:url value='/download?name=${candidate.photo}'/>" alt="Photo absent" width="50px" height="50px"/>
+                                    <c:out value="${candidate.photo}"/>
+                                    <c:out value="${candidate.name}"/>
                             <td>
                                 <a href='<c:url value="/upload.jsp?id=${candidate.id}&name=${candidate.name}"/>'>
                                     <i class="fa fa-edit mr-3"></i>
@@ -75,8 +77,15 @@
                                     <rp>(</rp><rt>Delete Photo</rt><rp>)</rp>
                                 </a>
                                 <br>
+                            <a href='<c:url value="/candidate/edit.jsp?id=${candidate.id}&name=${candidate.name}&city_id=${candidate.city_id}"/>'>
+                                <i class="fa fa-edit mr-3"></i>
+                            </a>
                                 <c:out value="${candidate.name}"/>
+                            <br>
+                                <c:out value="${candidate.city_id}"/>
+                            <br>
                                 <c:out value="${candidate.id}"/>
+
                         </tr>
                     </c:forEach>
                     </tbody>

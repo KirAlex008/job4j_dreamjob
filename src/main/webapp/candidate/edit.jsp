@@ -18,7 +18,49 @@
             integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
             integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
+
+        <script>
+            $(document).ready(function () {
+                $.ajax({
+                    url: 'http://localhost:8080/dreamjob/cities',
+                    type: "GET",
+                    dataType: "json",
+                    success: function(data){
+                        var data2 = JSON.parse(JSON.stringify(data))
+                        var options = $("#city");
+                        $.each(data, function(index) {
+                            options.append($("<option />").val(data2[index].id).text(data2[index].name));
+                        });
+                    }
+                });
+            })
+
+            function validate() {
+                let formFieldName = $('#name').val();
+                let formFieldCity = $('#city').val()
+                let missingFields = '';
+
+                if (formFieldName === '') {
+                    missingFields += " name ";
+                }
+
+                if (formFieldCity === '') {
+                    missingFields += " city ";
+                }
+
+                if (missingFields !== '') {
+                    alert("Enter next fields: " + missingFields);
+                    return false;
+                }
+
+                if (missingFields === '') {
+                return true;
+            }
+            }
+
+    </script>
     <title>Работа мечты</title>
 </head>
 <body>
@@ -58,17 +100,24 @@
                 <% } else { %>
                 Редактирование кандидата.
                 <% } %>
+
             </div>
             <div class="card-body">
                 <form action="<%=request.getContextPath()%>/candidates.do?id=<%=cand.getId()%>" method="post">
                     <div class="form-group">
                         <label>Имя</label>
                         <label>
-                            <input type="text" class="form-control" name="name" value="<%=cand.getName()%>">
+                            <input type="text" class="form-control" value="<%=cand.getName()%>" id="name" name="name">
                         </label>
                     </div>
-                    <button type="submit" class="btn btn-primary">Сохранить</button>
+                    <div class="form-group">
+                        <select name="city" id="city" >
+                            <option></option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary" onclick="return validate();" >Сохранить</button>
                 </form>
+
             </div>
         </div>
     </div>

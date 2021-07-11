@@ -1,6 +1,7 @@
 package ru.job4j.dream.store;
 
 import ru.job4j.dream.model.Candidate;
+import ru.job4j.dream.model.City;
 import ru.job4j.dream.model.Post;
 import ru.job4j.dream.model.User;
 
@@ -34,4 +35,9 @@ public interface Store {
     User findByEmail(String email);
 
     User createUser(User user);
+
+    City findCityById(int id);
+
+    Collection<City> findAllCities();
+
 }

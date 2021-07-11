@@ -2,6 +2,7 @@ package ru.job4j.dream.store;
 
 import org.apache.commons.dbcp2.BasicDataSource;
 import ru.job4j.dream.model.Candidate;
+import ru.job4j.dream.model.City;
 import ru.job4j.dream.model.Post;
 
 import java.io.BufferedReader;
@@ -80,7 +81,7 @@ public class PsqlStore implements Store {
         ) {
             try (ResultSet it = ps.executeQuery()) {
                 while (it.next()) {
-                    candidates.add(new Candidate(it.getInt("id"), it.getString("name"), it.getString("photo")));
+                    candidates.add(new Candidate(it.getInt("id"), it.getString("name"), it.getInt("city_id"), it.getString("photo")));
                 }
             }
         } catch (Exception e) {
@@ -126,9 +127,11 @@ public class PsqlStore implements Store {
 
     private Candidate createC(Candidate candidate) {
         try (Connection cn = pool.getConnection();
-             PreparedStatement ps =  cn.prepareStatement("INSERT INTO candidate (name) VALUES (?)", PreparedStatement.RETURN_GENERATED_KEYS)
+             PreparedStatement ps =  cn.prepareStatement("INSERT INTO candidate (name, city_id, photo) VALUES (?,?,?)", PreparedStatement.RETURN_GENERATED_KEYS)
         ) {
             ps.setString(1, candidate.getName());
+            ps.setInt(2, candidate.getCity_id());
+            ps.setString(3, candidate.getPhoto());
             ps.execute();
             try (ResultSet id = ps.getGeneratedKeys()) {
                 if (id.next()) {
@@ -154,7 +157,7 @@ public class PsqlStore implements Store {
 
     private void updateC(Candidate candidate) {
         try (Connection cn = pool.getConnection();
-             PreparedStatement st = cn.prepareStatement("update candidate as u set name=?  where u.id=?")) {
+             PreparedStatement st = cn.prepareStatement("update candidate as c set name=?, photo=?, city_id=?  where c.id=?")) {
             st.setString(1, candidate.getName());
             st.setInt(2, candidate.getId());
             st.executeUpdate();
@@ -167,7 +170,7 @@ public class PsqlStore implements Store {
     public Post findByIdP(int id) {
         Post post = null;
         try (Connection cn = pool.getConnection();
-            PreparedStatement st = cn.prepareStatement("SELECT * FROM post where id=?")) {
+             PreparedStatement st = cn.prepareStatement("SELECT * FROM post where id=?")) {
             st.setInt(1, id);
             try (ResultSet it = st.executeQuery()) {
                 if (it.next()) {
@@ -188,7 +191,7 @@ public class PsqlStore implements Store {
             st.setInt(1, id);
             try (ResultSet it = st.executeQuery()) {
                 if (it.next()) {
-                    candidate = new Candidate(it.getInt("id"), it.getString("name"), it.getString("photo"));
+                    candidate = new Candidate(it.getInt("id"), it.getString("name"), it.getInt("city_id"),it.getString("photo"));
                 }
             }
         } catch (Exception e) {
@@ -229,7 +232,7 @@ public class PsqlStore implements Store {
                 LOG.error("Connection is not correct", e);
             }
         }
-            return user;
+        return user;
     }
 
 
@@ -260,6 +263,43 @@ public class PsqlStore implements Store {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public Collection<City> findAllCities() {
+        List<City> cities = new ArrayList<>();
+        try (Connection cn = pool.getConnection();
+             PreparedStatement ps = cn.prepareStatement("SELECT * FROM cities;")
+        ) {
+            try (ResultSet it = ps.executeQuery()) {
+                while (it.next()) {
+                    cities.add(new City(
+                            it.getInt("id"),
+                            it.getString("name")
+                    ));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return cities;
+    }
+
+    @Override
+    public City findCityById(int id) {
+        City city = null;
+        try (Connection cn = pool.getConnection();
+             PreparedStatement ps = cn.prepareStatement("SELECT * FROM cities where id = ?")
+        ) {
+            ps.setInt(1, id);
+            try (ResultSet set = ps.executeQuery()) {
+                if (set.next()) {
+                    city = new City(set.getInt("id"), set.getString("name"));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return city;
     }
 
 
